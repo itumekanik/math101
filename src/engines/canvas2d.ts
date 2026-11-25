@@ -5,6 +5,7 @@
  */
 import { h, hideTip, showTip } from "../shared/core.js";
 import { KIT } from "../shared/kit.js";
+import { LabelPlacer, anchorCandidates, lineCandidates, pointCandidates, vectorCandidates } from "./label-placer.ts";
 
 export interface DragHandle {
   id: string;
@@ -66,8 +67,9 @@ export function createCanvas2D(
   const { COLORS, fitCanvas, ns } = KIT;
   const canvas = h("canvas", { role: "img", "aria-label": opts.ariaLabel || "2D math plot" }) as HTMLCanvasElement;
   const style = opts.height ? `height:${opts.height}px` : `aspect-ratio:${opts.ratio ?? 1.45}`;
-  const wrap = h("div", { class: `math-canvas-wrap${opts.interactive ? " interactive" : ""}`, style }, canvas);
-  if (opts.hint) wrap.append(h("div", { class: "canvas-hint", text: opts.hint }));
+  const wrap = h("div", { class: `math-canvas-wrap is-2d${opts.interactive ? " interactive" : ""}`, style }, canvas);
+  const hintEl = opts.hint ? h("div", { class: "canvas-hint", text: opts.hint }) : null;
+  if (hintEl) wrap.append(hintEl);
   host.append(wrap);
 
   const ctx = canvas.getContext("2d")!;
@@ -191,6 +193,34 @@ export function createCanvas2D(
     const top = pad.t;
     const right = view.w - pad.r;
     const bottom = view.h - pad.b;
+
+    const reserved = [];
+    if (hintEl) {
+      const hw = Math.max(120, hintEl.offsetWidth + 14);
+      const hh = Math.max(22, hintEl.offsetHeight + 8);
+      reserved.push({ x: view.w - hw - 6, y: 4, w: hw + 4, h: hh + 4 });
+    }
+    if (scene.xLabel) {
+      ctx.font = "italic 13px Cambria, 'Times New Roman', serif";
+      const xw = ctx.measureText(scene.xLabel).width + 10;
+      reserved.push({ x: right - xw - 2, y: bottom - 20, w: xw + 4, h: 20 });
+    }
+    if (scene.yLabel) {
+      ctx.font = "italic 13px Cambria, 'Times New Roman', serif";
+      const yw = ctx.measureText(scene.yLabel).width + 10;
+      reserved.push({ x: left + 2, y: top + 1, w: yw + 4, h: 20 });
+    }
+    const placer = new LabelPlacer({ left: left + 3, top: top + 3, right: right - 3, bottom: bottom - 3 }, reserved);
+
+    // Pre-register handles & points as circle obstacles so vector/line labels can detect tip crowds!
+    for (const hd of scene.handles || []) {
+      const [px, py] = toPx(hd.x, hd.y);
+      placer.addCircle(px, py, (hd.radius ?? 7) + 2);
+    }
+    for (const pt of scene.points || []) {
+      const [px, py] = toPx(pt.x, pt.y);
+      placer.addCircle(px, py, (pt.r ?? 5) + (pt.ring ? 4 : 0));
+    }
 
     const xStep = scene.gridStep ?? niceGridStep(bounds.x1 - bounds.x0);
     const yStep = scene.gridStep ?? niceGridStep(bounds.y1 - bounds.y0);
@@ -356,11 +386,18 @@ export function createCanvas2D(
       ctx.stroke();
       if (ang.label) {
         const mid = (ang.start + ang.end) / 2;
-        ctx.fillStyle = ang.color ?? COLORS.c2;
-        ctx.font = "600 12px system-ui, sans-serif";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(ang.label, cx + (rPx + 14) * Math.cos(mid), cy - (rPx + 14) * Math.sin(mid));
+        const font = "600 12px system-ui, sans-serif";
+        const { w, h: lh } = placer.measure(ctx, ang.label, font, 12);
+        const ax = cx + (rPx + 14) * Math.cos(mid);
+        const ay = cy - (rPx + 14) * Math.sin(mid);
+        placer.queue({
+          text: ang.label,
+          color: ang.color ?? COLORS.c2,
+          font,
+          fontSize: 12,
+          priority: 40,
+          candidates: anchorCandidates(ax, ay, w, lh),
+        });
       }
     }
 
@@ -378,12 +415,18 @@ export function createCanvas2D(
       ctx.lineTo(p2[0], p2[1]);
       ctx.stroke();
       ctx.setLineDash([]);
+      placer.addSegment(p1[0], p1[1], p2[0], p2[1], line.dash?.length ? 0.55 : 0.85);
       if (line.label) {
-        ctx.fillStyle = line.color ?? COLORS.c1;
-        ctx.font = "600 12px system-ui, sans-serif";
-        ctx.textAlign = "left";
-        ctx.textBaseline = "bottom";
-        ctx.fillText(line.label, (p1[0] + p2[0]) / 2 + 6, (p1[1] + p2[1]) / 2 - 4);
+        const font = "600 12px system-ui, sans-serif";
+        const { w, h: lh } = placer.measure(ctx, line.label, font, 12);
+        placer.queue({
+          text: line.label,
+          color: line.color ?? COLORS.c1,
+          font,
+          fontSize: 12,
+          priority: 30,
+          candidates: lineCandidates(p1[0], p1[1], p2[0], p2[1], w, lh),
+        });
       }
     }
 
@@ -453,21 +496,28 @@ export function createCanvas2D(
       ctx.lineTo(p2[0], p2[1]);
       ctx.stroke();
       ctx.setLineDash([]);
+      placer.addSegment(p1[0], p1[1], p2[0], p2[1], seg.dash?.length ? 0.55 : 0.85);
     }
 
     // Vectors
     for (const vec of scene.vectors || []) {
       const from = vec.from ?? [0, 0];
       drawArrow(from, vec.to, vec.color ?? COLORS.c1, vec.width ?? 2.5, vec.dash ?? []);
+      const [fx, fy] = toPx(from[0], from[1]);
+      const [tx, ty] = toPx(vec.to[0], vec.to[1]);
+      placer.addSegment(fx, fy, tx, ty, vec.dash?.length ? 0.75 : 1.0);
       if (vec.label) {
-        const [tx, ty] = toPx(vec.to[0], vec.to[1]);
-        const [fx, fy] = toPx(from[0], from[1]);
-        const ang = Math.atan2(ty - fy, tx - fx);
-        ctx.fillStyle = vec.color ?? COLORS.c1;
-        ctx.font = "600 13px system-ui, sans-serif";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(vec.label, tx + 13 * Math.cos(ang), ty + 13 * Math.sin(ang));
+        const font = "650 13px system-ui, sans-serif";
+        const { w, h: lh } = placer.measure(ctx, vec.label, font, 13);
+        const tipCrowded = placer.hasCircleNear(tx, ty, 12);
+        placer.queue({
+          text: vec.label,
+          color: vec.color ?? COLORS.c1,
+          font,
+          fontSize: 13,
+          priority: 20,
+          candidates: vectorCandidates(fx, fy, tx, ty, w, lh, tipCrowded),
+        });
       }
     }
 
@@ -488,11 +538,16 @@ export function createCanvas2D(
       ctx.lineWidth = pt.hollow ? 2.2 : 1.5;
       ctx.stroke();
       if (pt.label) {
-        ctx.fillStyle = pt.color ?? COLORS.text;
-        ctx.font = "600 12px system-ui, sans-serif";
-        ctx.textAlign = "left";
-        ctx.textBaseline = "bottom";
-        ctx.fillText(pt.label, px + r + 5, py - 3);
+        const font = "600 12px system-ui, sans-serif";
+        const { w, h: lh } = placer.measure(ctx, pt.label, font, 12);
+        placer.queue({
+          text: pt.label,
+          color: pt.color ?? COLORS.text,
+          font,
+          fontSize: 12,
+          priority: 12,
+          candidates: pointCandidates(px, py, r + (pt.ring ? 4 : 0), w, lh),
+        });
       }
     }
 
@@ -514,40 +569,57 @@ export function createCanvas2D(
       ctx.lineWidth = 2;
       ctx.stroke();
       if (hd.label) {
-        ctx.fillStyle = COLORS.text;
-        ctx.font = "650 12.5px system-ui, sans-serif";
-        ctx.textAlign = "left";
-        ctx.textBaseline = "bottom";
-        ctx.fillText(hd.label, px + r + 6, py - 4);
+        const font = "700 12.5px system-ui, sans-serif";
+        const { w, h: lh } = placer.measure(ctx, hd.label, font, 12.5);
+        placer.queue({
+          text: hd.label,
+          color: COLORS.text,
+          font,
+          fontSize: 12.5,
+          priority: 5,
+          candidates: pointCandidates(px, py, r + 3, w, lh),
+        });
       }
     }
 
     // Labels
     for (const lb of scene.labels || []) {
       const [px, py] = toPx(lb.x, lb.y);
-      ctx.fillStyle = lb.color ?? COLORS.text2;
-      ctx.font = "600 12px system-ui, sans-serif";
-      ctx.textAlign = lb.align ?? "left";
-      ctx.textBaseline = lb.base ?? "bottom";
-      ctx.fillText(lb.text, px, py);
+      const font = "600 12px system-ui, sans-serif";
+      const { w, h: lh } = placer.measure(ctx, lb.text, font, 12);
+      const align = lb.align ?? "left";
+      const base = lb.base ?? "bottom";
+      const cx = align === "center" ? px : align === "right" ? px - w / 2 : px + w / 2;
+      const cy = base === "middle" ? py : base === "top" ? py + lh / 2 : py - lh / 2;
+      placer.queue({
+        text: lb.text,
+        color: lb.color ?? COLORS.text2,
+        font,
+        fontSize: 12,
+        priority: 35,
+        candidates: anchorCandidates(cx, cy, w, lh),
+      });
     }
+
+    // Render all queued labels last with automatic collision avoidance + crisp surface halo
+    placer.renderAll(ctx, COLORS.surface);
 
     ctx.restore();
 
-    // Ticks outside clip
+    // Ticks outside clip (avoid clipping at corners)
     ctx.font = "11px system-ui, sans-serif";
     ctx.fillStyle = COLORS.muted;
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
     for (let v = Math.ceil(bounds.x0 / xStep) * xStep; v <= bounds.x1 + 1e-9; v += xStep) {
       const [px] = toPx(v, 0);
-      if (px >= left - 4 && px <= right + 4) ctx.fillText(ns(v, 2), px, bottom + 5);
+      if (px >= left + 8 && px <= right - 8) ctx.fillText(ns(v, 2), px, bottom + 5);
     }
     ctx.textAlign = "right";
     ctx.textBaseline = "middle";
     for (let v = Math.ceil(bounds.y0 / yStep) * yStep; v <= bounds.y1 + 1e-9; v += yStep) {
       const [, py] = toPx(0, v);
-      if (py >= top - 4 && py <= bottom + 4) ctx.fillText(ns(v, 2), left - 6, py);
+      if (py >= top + 6 && py <= bottom - 6) ctx.fillText(ns(v, 2), left - 6, py);
     }
     ctx.font = "italic 13px Cambria, 'Times New Roman', serif";
     ctx.fillStyle = COLORS.text2;

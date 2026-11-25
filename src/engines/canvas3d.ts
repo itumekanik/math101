@@ -5,6 +5,7 @@
 import { h } from "../shared/core.js";
 import { L } from "../shared/i18n.js";
 import { KIT } from "../shared/kit.js";
+import { LabelPlacer, anchorCandidates, pointCandidates, vectorCandidates } from "./label-placer.ts";
 
 export type Vec3 = [number, number, number];
 
@@ -53,10 +54,8 @@ export function createCanvas3D(host: HTMLElement, opts: { height?: number; ariaL
     });
     btns.append(b);
   }
-  wrap.append(
-    btns,
-    h("div", { class: "canvas-hint", text: L({ tr: "Döndürmek için sürükleyin", en: "Drag to orbit" }) }),
-  );
+  const hintEl = h("div", { class: "canvas-hint", text: L({ tr: "Döndürmek için sürükleyin", en: "Drag to orbit" }) });
+  wrap.append(btns, hintEl);
   host.append(wrap);
 
   const ctx = canvas.getContext("2d")!;
@@ -124,6 +123,16 @@ export function createCanvas3D(host: HTMLElement, opts: { height?: number; ariaL
     const cx = view.w / 2;
     const cy = view.h / 2 + 10;
     const scale = Math.min(view.w, view.h) / (R * 2.9);
+
+    const reserved = [
+      { x: view.w - Math.max(122, btns.offsetWidth + 14), y: 2, w: Math.max(124, btns.offsetWidth + 16), h: Math.max(34, btns.offsetHeight + 12) },
+      { x: 4, y: view.h - Math.max(28, hintEl.offsetHeight + 12), w: Math.max(165, hintEl.offsetWidth + 16), h: Math.max(26, hintEl.offsetHeight + 10) },
+    ];
+    const placer = new LabelPlacer({ left: 8, top: 8, right: view.w - 8, bottom: view.h - 8 }, reserved);
+    for (const pt of scene.points || []) {
+      const [px, py] = project(pt.p, scale, cx, cy);
+      placer.addCircle(px, py, 7);
+    }
 
     // Reference XY grid
     ctx.strokeStyle = COLORS.grid;
@@ -239,12 +248,20 @@ export function createCanvas3D(host: HTMLElement, opts: { height?: number; ariaL
     ];
     for (const [f, t, lbl] of axes) {
       arrow3(f, t, COLORS.axis, 1.4, scale, cx, cy);
-      const [lx, ly] = project([t[0] * 1.08, t[1] * 1.08, t[2] * 1.08], scale, cx, cy);
-      ctx.fillStyle = COLORS.text2;
-      ctx.font = "italic 600 13px Cambria, 'Times New Roman', serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(lbl, lx, ly);
+      const a = project(f, scale, cx, cy);
+      const b = project(t, scale, cx, cy);
+      placer.addSegment(a[0], a[1], b[0], b[1], 0.35);
+      const [lx, ly] = project([t[0] * 1.09, t[1] * 1.09, t[2] * 1.09], scale, cx, cy);
+      const font = "italic 600 13px Cambria, 'Times New Roman', serif";
+      const { w, h: lh } = placer.measure(ctx, lbl, font, 13);
+      placer.queue({
+        text: lbl,
+        color: COLORS.text2,
+        font,
+        fontSize: 13,
+        priority: 30,
+        candidates: anchorCandidates(lx, ly, w, lh),
+      });
     }
 
     // Segments
@@ -256,19 +273,28 @@ export function createCanvas3D(host: HTMLElement, opts: { height?: number; ariaL
       ctx.setLineDash(seg.dash ?? []);
       ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
       ctx.setLineDash([]);
+      placer.addSegment(a[0], a[1], b[0], b[1], seg.dash?.length ? 0.55 : 0.85);
     }
 
     // Vectors
     for (const vec of scene.vectors || []) {
       const from = vec.from ?? [0, 0, 0];
       arrow3(from, vec.to, vec.color ?? COLORS.c1, vec.width ?? 2.6, scale, cx, cy);
+      const [fx, fy] = project(from, scale, cx, cy);
+      const [tx, ty] = project(vec.to, scale, cx, cy);
+      placer.addSegment(fx, fy, tx, ty, 1.0);
       if (vec.label) {
-        const [lx, ly] = project(vec.to, scale, cx, cy);
-        ctx.fillStyle = vec.color ?? COLORS.c1;
-        ctx.font = "650 13px system-ui, sans-serif";
-        ctx.textAlign = "left";
-        ctx.textBaseline = "bottom";
-        ctx.fillText(vec.label, lx + 6, ly - 4);
+        const font = "650 13px system-ui, sans-serif";
+        const { w, h: lh } = placer.measure(ctx, vec.label, font, 13);
+        const tipCrowded = placer.hasCircleNear(tx, ty, 12);
+        placer.queue({
+          text: vec.label,
+          color: vec.color ?? COLORS.c1,
+          font,
+          fontSize: 13,
+          priority: 15,
+          candidates: vectorCandidates(fx, fy, tx, ty, w, lh, tipCrowded),
+        });
       }
     }
 
@@ -292,13 +318,20 @@ export function createCanvas3D(host: HTMLElement, opts: { height?: number; ariaL
       ctx.lineWidth = 1.8;
       ctx.stroke();
       if (pt.label) {
-        ctx.fillStyle = COLORS.text;
-        ctx.font = "600 12px system-ui, sans-serif";
-        ctx.textAlign = "left";
-        ctx.textBaseline = "bottom";
-        ctx.fillText(pt.label, px + 8, py - 4);
+        const font = "650 12px system-ui, sans-serif";
+        const { w, h: lh } = placer.measure(ctx, pt.label, font, 12);
+        placer.queue({
+          text: pt.label,
+          color: COLORS.text,
+          font,
+          fontSize: 12,
+          priority: 8,
+          candidates: pointCandidates(px, py, 6, w, lh),
+        });
       }
     }
+
+    placer.renderAll(ctx, COLORS.surface);
   }
 
   const view = fitCanvas(canvas, render);

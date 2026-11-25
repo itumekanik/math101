@@ -110,7 +110,7 @@ mountChapter({
         },
         {
           tryList: [
-            { tr: R`Mavi \(P\) ve yeşil \(Q\) noktalarını birlikte aynı miktarda kaydırın: orijindeki kesikli \(\mathbf v\) okunun hiç kıpırdamadığını görün!`, en: R`Drag \(P\) and \(Q\) together by the same shift: notice the origin-anchored copy of \(\mathbf v\) stays completely unchanged!` },
+            { tr: R`Yeşil \(P\) ve mavi \(Q\) noktalarını birlikte aynı miktarda kaydırın: orijindeki kesikli \(\mathbf v\) okunun hiç kıpırdamadığını görün!`, en: R`Drag \(P\) and \(Q\) together by the same shift: notice the origin-anchored copy of \(\mathbf v\) stays completely unchanged!` },
             { tr: R`"3–4–5 Üçgeni" hazır ayarına tıklayıp \(\|\mathbf v\| = 5\) ve \(\hat{\mathbf v} = (0.6, 0.8)\) değerlerini doğrulayın.`, en: R`Click the "3–4–5 Triangle" preset to verify \(\|\mathbf v\| = 5\) and \(\hat{\mathbf v} = (0.6, 0.8)\).` },
             { tr: R`\(Q\)'yu istediğiniz yere sürükleyin: turuncu birim vektör \(\hat{\mathbf v}\)'nin ucunun <b>daima</b> kesikli birim çember (\(r=1\)) üzerinde gezdiğini gözlemleyin.`, en: R`Drag \(Q\) anywhere: watch the orange unit vector \(\hat{\mathbf v}\) ALWAYS touch the dashed unit circle (\(r=1\)).` },
           ],
@@ -132,6 +132,7 @@ mountChapter({
           const v = vSub(s.q, s.p);
           const len = vNorm(v);
           const u = len > 1e-6 ? [v[0] / len, v[1] / len] : [0, 0];
+          const atOrigin = Math.hypot(s.p[0], s.p[1]) < 0.12;
           plot.draw({
             x: [-4.5, 5],
             y: [-4, 5],
@@ -140,8 +141,8 @@ mountChapter({
             yLabel: "x₂",
             circles: [{ cx: 0, cy: 0, r: 1, stroke: COLORS.muted, dash: [4, 4], width: 1.4 }],
             vectors: [
-              { from: s.p, to: s.q, color: COLORS.c1, width: 2.8, label: "PQ" },
-              { to: [v[0], v[1]], color: COLORS.c1, dash: [4, 3], width: 2, label: "v" },
+              { from: s.p, to: s.q, color: COLORS.c1, width: 2.8, label: atOrigin ? "v = PQ" : "PQ" },
+              ...(!atOrigin ? [{ to: [v[0], v[1]], color: COLORS.c1, dash: [4, 3], width: 2, label: "v" }] : []),
               ...(len > 1e-6 ? [{ to: u, color: COLORS.c2, width: 3, label: "v̂" }] : []),
             ],
             handles: [
