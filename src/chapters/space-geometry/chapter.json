@@ -1,0 +1,14 @@
+{
+  "id": "space-geometry",
+  "order": 4,
+  "status": "ready",
+  "lecture": "Lecture 5",
+  "part": "foundations",
+  "short": "Space Geo",
+  "title": { "tr": "Uzay Geometrisi", "en": "Space Geometry" },
+  "sub": { "tr": "3B vektörler, vektörel çarpım, düzlemler, doğrular ve aykırı doğrular", "en": "3D vectors, cross product, planes, lines & skew distances" },
+  "page": {
+    "title": { "tr": "Uzay Geometrisi", "en": "Space Geometry" },
+    "tabs": ["theory", "play", "math", "practice"]
+  }
+}

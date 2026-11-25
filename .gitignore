@@ -1,0 +1,25 @@
+# Dependencies & build output
+node_modules/
+dist/
+*.zip
+
+# Test artifacts
+test-results/
+playwright-report/
+
+# Local reference scans (kept local, not published)
+Konular_*.jpeg
+
+# Logs & temporary files
+*.log
+*.tmp
+*.tmp.mjs
+*.bak
+*.swp
+
+# OS & editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

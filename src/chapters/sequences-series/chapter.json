@@ -1,0 +1,28 @@
+{
+  "id": "sequences-series",
+  "order": 13,
+  "status": "ready",
+  "lecture": "Lecture 16",
+  "part": "series-int",
+  "short": "Seq & Series",
+  "title": {
+    "tr": "Reel Sayı Dizileri ve Serileri",
+    "en": "Sequences + Series of Real Numbers"
+  },
+  "sub": {
+    "tr": "Yakınsaklık, kısmi toplamlar, p-serisi, oran/integral testleri ve Leibniz alterne serileri",
+    "en": "Convergence, partial sums, p-series, ratio/integral tests & alternating series"
+  },
+  "page": {
+    "title": {
+      "tr": "Reel Sayı Dizileri ve Serileri",
+      "en": "Sequences + Series of Real Numbers"
+    },
+    "tabs": [
+      "theory",
+      "play",
+      "math",
+      "practice"
+    ]
+  }
+}

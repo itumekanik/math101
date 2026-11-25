@@ -1,0 +1,28 @@
+{
+  "id": "limits",
+  "order": 11,
+  "status": "ready",
+  "lecture": "Lecture 13",
+  "part": "calculus",
+  "short": "Limits",
+  "title": {
+    "tr": "Limitler",
+    "en": "Limits"
+  },
+  "sub": {
+    "tr": "ε–δ tanımı, tek taraflı limitler, sandviç teoremi, süreklilik ve Ara Değer Teoremi",
+    "en": "ε–δ definition, one-sided limits, Squeeze Theorem, continuity & IVT"
+  },
+  "page": {
+    "title": {
+      "tr": "Limitler",
+      "en": "Limits"
+    },
+    "tabs": [
+      "theory",
+      "play",
+      "math",
+      "practice"
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "id": "inner-product",
+  "order": 10,
+  "status": "ready",
+  "lecture": "Lecture 12",
+  "part": "linalg",
+  "short": "Inner Prod",
+  "title": {
+    "tr": "İç Çarpım Uzayları ve En İyi Yaklaşım",
+    "en": "Inner Product Spaces + Best Approximation"
+  },
+  "sub": {
+    "tr": "Ortogonallik, Gram–Schmidt, dik izdüşüm ve en küçük kareler (normal denklemler)",
+    "en": "Orthogonality, Gram–Schmidt, orthogonal projection & least squares"
+  },
+  "page": {
+    "title": {
+      "tr": "İç Çarpım Uzayları ve En İyi Yaklaşım",
+      "en": "Inner Product Spaces + Best Approximation"
+    },
+    "tabs": [
+      "theory",
+      "play",
+      "math",
+      "practice"
+    ]
+  }
+}

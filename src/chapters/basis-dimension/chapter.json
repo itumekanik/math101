@@ -1,0 +1,28 @@
+{
+  "id": "basis-dimension",
+  "order": 9,
+  "status": "ready",
+  "lecture": "Lecture 11",
+  "part": "linalg",
+  "short": "Basis & Dim",
+  "title": {
+    "tr": "Taban, Boyut ve Koordinatlar",
+    "en": "Basis, Dimension, and Coordinates"
+  },
+  "sub": {
+    "tr": "Eğik koordinat ızgarası, taban değişim matrisi ve Rank–Sıfırlık teoremi",
+    "en": "Skew coordinate grids, change-of-basis matrix & Rank–Nullity theorem"
+  },
+  "page": {
+    "title": {
+      "tr": "Taban, Boyut ve Koordinatlar",
+      "en": "Basis, Dimension, and Coordinates"
+    },
+    "tabs": [
+      "theory",
+      "play",
+      "math",
+      "practice"
+    ]
+  }
+}

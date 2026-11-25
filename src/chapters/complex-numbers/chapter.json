@@ -1,0 +1,28 @@
+{
+  "id": "complex-numbers",
+  "order": 18,
+  "status": "ready",
+  "lecture": "Lecture 21",
+  "part": "complex",
+  "short": "Complex",
+  "title": {
+    "tr": "Karmaşık Sayılar",
+    "en": "Complex Numbers"
+  },
+  "sub": {
+    "tr": "Argand düzlemi, kutupsal form, Euler formülü, De Moivre ve n. dereceden kökler",
+    "en": "Argand plane, polar form, Euler formula, De Moivre & n-th roots of unity"
+  },
+  "page": {
+    "title": {
+      "tr": "Karmaşık Sayılar",
+      "en": "Complex Numbers"
+    },
+    "tabs": [
+      "theory",
+      "play",
+      "math",
+      "practice"
+    ]
+  }
+}

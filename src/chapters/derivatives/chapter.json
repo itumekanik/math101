@@ -1,0 +1,28 @@
+{
+  "id": "derivatives",
+  "order": 12,
+  "status": "ready",
+  "lecture": "Lecture 14+15",
+  "part": "calculus",
+  "short": "Derivatives",
+  "title": {
+    "tr": "Türevler ve Türev Uygulamaları",
+    "en": "Derivatives + Applications of Derivatives"
+  },
+  "sub": {
+    "tr": "Kirişten teğete, f′ ve f″ grafikleri, Ortalama Değer Teoremi, Newton yöntemi ve L′Hôpital",
+    "en": "Secant to tangent, f′ & f″ analysis, Mean Value Theorem, Newton & L′Hôpital"
+  },
+  "page": {
+    "title": {
+      "tr": "Türevler ve Türev Uygulamaları",
+      "en": "Derivatives + Applications of Derivatives"
+    },
+    "tabs": [
+      "theory",
+      "play",
+      "math",
+      "practice"
+    ]
+  }
+}

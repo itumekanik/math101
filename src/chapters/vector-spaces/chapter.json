@@ -1,0 +1,28 @@
+{
+  "id": "vector-spaces",
+  "order": 8,
+  "status": "ready",
+  "lecture": "Lecture 9+10",
+  "part": "linalg",
+  "short": "Vec Spaces",
+  "title": {
+    "tr": "Vektör Uzayları",
+    "en": "Vector Spaces"
+  },
+  "sub": {
+    "tr": "Aksiyomlar, alt uzaylar, germe (span), doğrusal bağımsızlık, çekirdek ve sütun uzayı",
+    "en": "Axioms, subspaces, span, linear independence, null & column spaces"
+  },
+  "page": {
+    "title": {
+      "tr": "Vektör Uzayları",
+      "en": "Vector Spaces"
+    },
+    "tabs": [
+      "theory",
+      "play",
+      "math",
+      "practice"
+    ]
+  }
+}

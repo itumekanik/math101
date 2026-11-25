@@ -1,0 +1,14 @@
+{
+  "id": "plane-geometry",
+  "order": 3,
+  "status": "ready",
+  "lecture": "Lecture 3+4",
+  "part": "foundations",
+  "short": "Plane Geo",
+  "title": { "tr": "Düzlem Geometrisi", "en": "Plane Geometry" },
+  "sub": { "tr": "Doğru denklemleri, normal vektör, uzaklıklar ve konik kesitler", "en": "Lines, normal vectors, distances, angles & conic sections" },
+  "page": {
+    "title": { "tr": "Düzlem Geometrisi", "en": "Plane Geometry" },
+    "tabs": ["theory", "play", "math", "practice"]
+  }
+}

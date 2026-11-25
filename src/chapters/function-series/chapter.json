@@ -1,0 +1,28 @@
+{
+  "id": "function-series",
+  "order": 14,
+  "status": "ready",
+  "lecture": "Lecture 17",
+  "part": "series-int",
+  "short": "Func Series",
+  "title": {
+    "tr": "Fonksiyon Serileri",
+    "en": "Function Series"
+  },
+  "sub": {
+    "tr": "Düzgün yakınsaklık, kuvvet serileri, yakınsaklık yarıçapı ve Taylor/Maclaurin açılımları",
+    "en": "Uniform convergence, power series, radius of convergence & Taylor/Maclaurin series"
+  },
+  "page": {
+    "title": {
+      "tr": "Fonksiyon Serileri",
+      "en": "Function Series"
+    },
+    "tabs": [
+      "theory",
+      "play",
+      "math",
+      "practice"
+    ]
+  }
+}

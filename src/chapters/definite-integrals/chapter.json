@@ -1,0 +1,28 @@
+{
+  "id": "definite-integrals",
+  "order": 16,
+  "status": "ready",
+  "lecture": "Lecture 19",
+  "part": "series-int",
+  "short": "Def Int",
+  "title": {
+    "tr": "Belirli İntegraller",
+    "en": "Definite Integrals"
+  },
+  "sub": {
+    "tr": "Riemann/Darboux toplamları, Kalkülüsün Temel Teoremi (FTC) ve genelleştirilmiş integraller",
+    "en": "Riemann/Darboux sums, Fundamental Theorem of Calculus & improper integrals"
+  },
+  "page": {
+    "title": {
+      "tr": "Belirli İntegraller",
+      "en": "Definite Integrals"
+    },
+    "tabs": [
+      "theory",
+      "play",
+      "math",
+      "practice"
+    ]
+  }
+}

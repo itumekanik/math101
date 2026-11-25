@@ -1,0 +1,15 @@
+{
+  "id": "vectors",
+  "order": 2,
+  "status": "ready",
+  "lecture": "Lecture 2",
+  "part": "foundations",
+  "short": "Vectors",
+  "title": { "tr": "Sayılar, Noktalar ve Vektörler", "en": "Numbers, Points, and Vectors" },
+  "sub": { "tr": "Reel sayılar, Öklid normu, nokta çarpım, açı ve izdüşüm", "en": "Real numbers, Euclidean norm, dot product, angles & projection" },
+  "page": {
+    "title": { "tr": "Sayılar, Noktalar ve Vektörler", "en": "Numbers, Points, and Vectors" },
+    "brand": { "tr": "Sayılar, Noktalar & Vektörler", "en": "Numbers, Points & Vectors" },
+    "tabs": ["theory", "play", "math", "practice"]
+  }
+}

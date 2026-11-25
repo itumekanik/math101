@@ -1,0 +1,28 @@
+{
+  "id": "indefinite-integrals",
+  "order": 15,
+  "status": "ready",
+  "lecture": "Lecture 18",
+  "part": "series-int",
+  "short": "Indef Int",
+  "title": {
+    "tr": "Belirsiz İntegraller",
+    "en": "Indefinite Integrals"
+  },
+  "sub": {
+    "tr": "İlkel fonksiyon ailesi F(x)+C, değişken değiştirme, kısmi integrasyon ve basit kesirler",
+    "en": "Antiderivative family F(x)+C, u-substitution, integration by parts & partial fractions"
+  },
+  "page": {
+    "title": {
+      "tr": "Belirsiz İntegraller",
+      "en": "Indefinite Integrals"
+    },
+    "tabs": [
+      "theory",
+      "play",
+      "math",
+      "practice"
+    ]
+  }
+}

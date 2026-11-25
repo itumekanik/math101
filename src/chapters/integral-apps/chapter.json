@@ -1,0 +1,28 @@
+{
+  "id": "integral-apps",
+  "order": 17,
+  "status": "ready",
+  "lecture": "Lecture 20",
+  "part": "series-int",
+  "short": "Int Apps",
+  "title": {
+    "tr": "Belirli İntegral Uygulamaları",
+    "en": "Applications of Definite Integrals"
+  },
+  "sub": {
+    "tr": "Eğriler arası alan, 3B dönel cisim hacmi (disk/halka), yay uzunluğu ve ortalama değer",
+    "en": "Area between curves, 3D volumes of revolution, arc length & average value"
+  },
+  "page": {
+    "title": {
+      "tr": "Belirli İntegral Uygulamaları",
+      "en": "Applications of Definite Integrals"
+    },
+    "tabs": [
+      "theory",
+      "play",
+      "math",
+      "practice"
+    ]
+  }
+}

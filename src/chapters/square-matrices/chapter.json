@@ -1,0 +1,28 @@
+{
+  "id": "square-matrices",
+  "order": 6,
+  "status": "ready",
+  "lecture": "Lecture 7",
+  "part": "linalg",
+  "short": "Square Mat",
+  "title": {
+    "tr": "Kare Matrisler",
+    "en": "Square Matrices"
+  },
+  "sub": {
+    "tr": "Determinant, alan ölçeği, ters matris, kofaktörler ve ortogonal matrisler",
+    "en": "Determinant, area scaling, matrix inverse, cofactors & orthogonal matrices"
+  },
+  "page": {
+    "title": {
+      "tr": "Kare Matrisler",
+      "en": "Square Matrices"
+    },
+    "tabs": [
+      "theory",
+      "play",
+      "math",
+      "practice"
+    ]
+  }
+}

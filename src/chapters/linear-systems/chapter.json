@@ -1,0 +1,28 @@
+{
+  "id": "linear-systems",
+  "order": 7,
+  "status": "ready",
+  "lecture": "Lecture 8",
+  "part": "linalg",
+  "short": "Lin Systems",
+  "title": {
+    "tr": "Lineer Denklem Sistemleri",
+    "en": "Linear Systems"
+  },
+  "sub": {
+    "tr": "Gauss yok etme, RREF, pivotlar, rank ve Rouché–Capelli teoremi",
+    "en": "Gaussian elimination, RREF, pivots, rank & Rouché–Capelli theorem"
+  },
+  "page": {
+    "title": {
+      "tr": "Lineer Denklem Sistemleri",
+      "en": "Linear Systems"
+    },
+    "tabs": [
+      "theory",
+      "play",
+      "math",
+      "practice"
+    ]
+  }
+}

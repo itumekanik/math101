@@ -1,0 +1,15 @@
+{
+  "id": "functions",
+  "order": 1,
+  "status": "ready",
+  "lecture": "Lecture 1",
+  "part": "foundations",
+  "short": "Functions",
+  "title": { "tr": "Fonksiyonlar ve Aşkın Fonksiyonlar", "en": "Functions + Transcendental Functions" },
+  "sub": { "tr": "Tanım kümesi, ters fonksiyon, üstel, logaritmik, trigonometrik ve hiperbolik", "en": "Domain, inverses, exponential, logarithmic, trigonometric & hyperbolic" },
+  "page": {
+    "title": { "tr": "Fonksiyonlar", "en": "Functions" },
+    "brand": { "tr": "Fonksiyonlar & Aşkın Fonksiyonlar", "en": "Functions & Transcendentals" },
+    "tabs": ["theory", "play", "math", "practice"]
+  }
+}
