@@ -74,9 +74,21 @@ export function createCanvas2D(
 
   const ctx = canvas.getContext("2d")!;
   let scene: Scene2D = { x: [-5, 5], y: [-5, 5] };
+  let scenePalette: Record<string, string> = { ...COLORS };
   let activeHandle: DragHandle | null = null;
   let bounds = { x0: -5, x1: 5, y0: -5, y1: 5 };
   const pad = { l: 38, r: 16, t: 14, b: 26 };
+
+  /** Remaps any theme token captured in `scene` if the user switched Light ↔ Dark since `draw()`. */
+  function rc(c: string | undefined, fallback: string): string {
+    if (!c) return fallback;
+    if (scenePalette.surface === COLORS.surface) return c;
+    const lc = c.toLowerCase();
+    for (const [k, v] of Object.entries(scenePalette)) {
+      if (v.toLowerCase() === lc && k in COLORS) return (COLORS as Record<string, string>)[k]!;
+    }
+    return c;
+  }
 
   function computeBounds() {
     let [x0, x1] = scene.x ?? [-5, 5];
@@ -253,8 +265,8 @@ export function createCanvas2D(
 
     // Optional transformed basis grid
     if (scene.basisGrid) {
-      const { b1, b2, color = COLORS.accent, range = 6 } = scene.basisGrid;
-      ctx.strokeStyle = color;
+      const { b1, b2, color, range = 6 } = scene.basisGrid;
+      ctx.strokeStyle = rc(color, COLORS.accent);
       ctx.globalAlpha = 0.25;
       ctx.lineWidth = 1.1;
       for (let k = -range; k <= range; k++) {
@@ -276,7 +288,7 @@ export function createCanvas2D(
         const [, py2] = toPx(0, band.from);
         ctx.fillRect(left, Math.min(py1, py2), right - left, Math.abs(py2 - py1));
         if (band.border) {
-          ctx.strokeStyle = band.border;
+          ctx.strokeStyle = rc(band.border, COLORS.accent);
           ctx.setLineDash([5, 4]);
           ctx.lineWidth = 1.2;
           ctx.beginPath(); ctx.moveTo(left, py1); ctx.lineTo(right, py1); ctx.moveTo(left, py2); ctx.lineTo(right, py2); ctx.stroke();
@@ -287,7 +299,7 @@ export function createCanvas2D(
         const [px2] = toPx(band.to, 0);
         ctx.fillRect(Math.min(px1, px2), top, Math.abs(px2 - px1), bottom - top);
         if (band.border) {
-          ctx.strokeStyle = band.border;
+          ctx.strokeStyle = rc(band.border, COLORS.accent);
           ctx.setLineDash([5, 4]);
           ctx.lineWidth = 1.2;
           ctx.beginPath(); ctx.moveTo(px1, top); ctx.lineTo(px1, bottom); ctx.moveTo(px2, top); ctx.lineTo(px2, bottom); ctx.stroke();
@@ -347,7 +359,7 @@ export function createCanvas2D(
         ctx.fill();
       }
       if (poly.stroke) {
-        ctx.strokeStyle = poly.stroke;
+        ctx.strokeStyle = rc(poly.stroke, COLORS.c1);
         ctx.lineWidth = poly.width ?? 2;
         ctx.setLineDash(poly.dash ?? []);
         ctx.stroke();
@@ -364,9 +376,9 @@ export function createCanvas2D(
       const ry = Math.abs(cy - ryPt);
       ctx.beginPath();
       ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
-      if (ci.fill) { ctx.fillStyle = ci.fill; ctx.fill(); }
+      if (ci.fill) { ctx.fillStyle = rc(ci.fill, COLORS.accentSoft); ctx.fill(); }
       if (ci.stroke) {
-        ctx.strokeStyle = ci.stroke;
+        ctx.strokeStyle = rc(ci.stroke, COLORS.muted);
         ctx.lineWidth = ci.width ?? 1.8;
         ctx.setLineDash(ci.dash ?? []);
         ctx.stroke();
@@ -379,7 +391,8 @@ export function createCanvas2D(
       const [cx, cy] = toPx(ang.cx, ang.cy);
       const [rxPt] = toPx(ang.cx + ang.r, ang.cy);
       const rPx = Math.abs(rxPt - cx);
-      ctx.strokeStyle = ang.color ?? COLORS.c2;
+      const angCol = rc(ang.color, COLORS.c2);
+      ctx.strokeStyle = angCol;
       ctx.lineWidth = 1.8;
       ctx.beginPath();
       ctx.arc(cx, cy, rPx, -ang.end, -ang.start, false);
@@ -392,7 +405,7 @@ export function createCanvas2D(
         const ay = cy - (rPx + 14) * Math.sin(mid);
         placer.queue({
           text: ang.label,
-          color: ang.color ?? COLORS.c2,
+          color: angCol,
           font,
           fontSize: 12,
           priority: 40,
@@ -407,7 +420,8 @@ export function createCanvas2D(
       if (!seg) continue;
       const p1 = toPx(seg[0][0], seg[0][1]);
       const p2 = toPx(seg[1][0], seg[1][1]);
-      ctx.strokeStyle = line.color ?? COLORS.c1;
+      const lineCol = rc(line.color, COLORS.c1);
+      ctx.strokeStyle = lineCol;
       ctx.lineWidth = line.width ?? 2.2;
       ctx.setLineDash(line.dash ?? []);
       ctx.beginPath();
@@ -421,7 +435,7 @@ export function createCanvas2D(
         const { w, h: lh } = placer.measure(ctx, line.label, font, 12);
         placer.queue({
           text: line.label,
-          color: line.color ?? COLORS.c1,
+          color: lineCol,
           font,
           fontSize: 12,
           priority: 30,
@@ -437,7 +451,7 @@ export function createCanvas2D(
       const rx0 = c.xRange ? Math.max(bounds.x0, c.xRange[0]) : bounds.x0;
       const rx1 = c.xRange ? Math.min(bounds.x1, c.xRange[1]) : bounds.x1;
       if (rx1 <= rx0) continue;
-      ctx.strokeStyle = c.color ?? COLORS.c1;
+      ctx.strokeStyle = rc(c.color, COLORS.c1);
       ctx.lineWidth = c.width ?? 2.4;
       ctx.lineJoin = "round";
       ctx.setLineDash(c.dash ?? []);
@@ -465,7 +479,7 @@ export function createCanvas2D(
     // Parametric curves
     for (const pm of scene.parametrics || []) {
       const n = pm.steps ?? 240;
-      ctx.strokeStyle = pm.color ?? COLORS.c1;
+      ctx.strokeStyle = rc(pm.color, COLORS.c1);
       ctx.lineWidth = pm.width ?? 2.3;
       ctx.setLineDash(pm.dash ?? []);
       ctx.beginPath();
@@ -488,7 +502,7 @@ export function createCanvas2D(
     for (const seg of scene.segments || []) {
       const p1 = toPx(seg.from[0], seg.from[1]);
       const p2 = toPx(seg.to[0], seg.to[1]);
-      ctx.strokeStyle = seg.color ?? COLORS.text2;
+      ctx.strokeStyle = rc(seg.color, COLORS.text2);
       ctx.lineWidth = seg.width ?? 1.8;
       ctx.setLineDash(seg.dash ?? []);
       ctx.beginPath();
@@ -502,7 +516,8 @@ export function createCanvas2D(
     // Vectors
     for (const vec of scene.vectors || []) {
       const from = vec.from ?? [0, 0];
-      drawArrow(from, vec.to, vec.color ?? COLORS.c1, vec.width ?? 2.5, vec.dash ?? []);
+      const vecCol = rc(vec.color, COLORS.c1);
+      drawArrow(from, vec.to, vecCol, vec.width ?? 2.5, vec.dash ?? []);
       const [fx, fy] = toPx(from[0], from[1]);
       const [tx, ty] = toPx(vec.to[0], vec.to[1]);
       placer.addSegment(fx, fy, tx, ty, vec.dash?.length ? 0.75 : 1.0);
@@ -512,7 +527,7 @@ export function createCanvas2D(
         const tipCrowded = placer.hasCircleNear(tx, ty, 12);
         placer.queue({
           text: vec.label,
-          color: vec.color ?? COLORS.c1,
+          color: vecCol,
           font,
           fontSize: 13,
           priority: 20,
@@ -525,16 +540,17 @@ export function createCanvas2D(
     for (const pt of scene.points || []) {
       const [px, py] = toPx(pt.x, pt.y);
       const r = pt.r ?? 5;
+      const ptCol = rc(pt.color, COLORS.accent);
       if (pt.ring) {
-        ctx.strokeStyle = pt.color ?? COLORS.accent;
+        ctx.strokeStyle = ptCol;
         ctx.lineWidth = 2;
         ctx.beginPath(); ctx.arc(px, py, r + 4, 0, Math.PI * 2); ctx.stroke();
       }
       ctx.beginPath();
       ctx.arc(px, py, r, 0, Math.PI * 2);
-      ctx.fillStyle = pt.hollow ? COLORS.surface : (pt.color ?? COLORS.accent);
+      ctx.fillStyle = pt.hollow ? COLORS.surface : ptCol;
       ctx.fill();
-      ctx.strokeStyle = pt.hollow ? (pt.color ?? COLORS.accent) : COLORS.surface;
+      ctx.strokeStyle = pt.hollow ? ptCol : COLORS.surface;
       ctx.lineWidth = pt.hollow ? 2.2 : 1.5;
       ctx.stroke();
       if (pt.label) {
@@ -542,7 +558,7 @@ export function createCanvas2D(
         const { w, h: lh } = placer.measure(ctx, pt.label, font, 12);
         placer.queue({
           text: pt.label,
-          color: pt.color ?? COLORS.text,
+          color: rc(pt.color, COLORS.text),
           font,
           fontSize: 12,
           priority: 12,
@@ -555,15 +571,16 @@ export function createCanvas2D(
     for (const hd of scene.handles || []) {
       const [px, py] = toPx(hd.x, hd.y);
       const r = hd.radius ?? 7;
+      const hdCol = rc(hd.color, COLORS.accent);
       ctx.beginPath();
       ctx.arc(px, py, r + 3, 0, Math.PI * 2);
-      ctx.fillStyle = hd.color ?? COLORS.accent;
+      ctx.fillStyle = hdCol;
       ctx.globalAlpha = 0.2;
       ctx.fill();
       ctx.globalAlpha = 1;
       ctx.beginPath();
       ctx.arc(px, py, r, 0, Math.PI * 2);
-      ctx.fillStyle = hd.color ?? COLORS.accent;
+      ctx.fillStyle = hdCol;
       ctx.fill();
       ctx.strokeStyle = COLORS.surface;
       ctx.lineWidth = 2;
@@ -593,7 +610,7 @@ export function createCanvas2D(
       const cy = base === "middle" ? py : base === "top" ? py + lh / 2 : py - lh / 2;
       placer.queue({
         text: lb.text,
-        color: lb.color ?? COLORS.text2,
+        color: rc(lb.color, COLORS.text2),
         font,
         fontSize: 12,
         priority: 35,
@@ -687,7 +704,10 @@ export function createCanvas2D(
     wrap,
     canvas,
     draw(next?: Scene2D) {
-      if (next) scene = next;
+      if (next) {
+        scene = next;
+        scenePalette = { ...COLORS };
+      }
       render();
     },
   };

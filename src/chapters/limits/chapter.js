@@ -424,7 +424,8 @@ mountChapter({
                 { f: (x) => -x * x, color: COLORS.c3, dash: [5, 4], width: 1.8 },
                 { f: (x) => (Math.abs(x) < 1e-5 ? 0 : x * x * Math.sin(1 / x)), color: COLORS.c1, width: 2.3 },
               ],
-              points: [{ x: 0, y: 0, color: COLORS.c2, r: 5.5, hollow: true, label: "L = 0" }],
+              points: [{ x: 0, y: 0, color: COLORS.c2, r: 5.5, hollow: true }],
+              labels: [{ x: 0, y: yMax * 0.28, text: "L = 0", color: COLORS.c2, align: "center", base: "bottom" }],
             });
             calc.textContent = R`\(-x^2 \le x^2\sin(1/x) \le x^2 \implies \lim_{x \to 0} x^2\sin(1/x) = 0\)`;
           } else if (s.ex === "sinc") {

@@ -35,9 +35,20 @@ export function createCanvas3D(host: HTMLElement, opts: { height?: number; ariaL
   let yaw = 0.65;
   let pitch = 0.48;
   let scene: Scene3D = { range: 4 };
+  let scenePalette: Record<string, string> = { ...COLORS };
   let dragging = false;
   let lastX = 0;
   let lastY = 0;
+
+  function rc(c: string | undefined, fallback: string): string {
+    if (!c) return fallback;
+    if (scenePalette.surface === COLORS.surface) return c;
+    const lc = c.toLowerCase();
+    for (const [k, v] of Object.entries(scenePalette)) {
+      if (v.toLowerCase() === lc && k in COLORS) return (COLORS as Record<string, string>)[k]!;
+    }
+    return c;
+  }
 
   const btns = h("div", { class: "canvas-overlay-btns" });
   const views: [string, number, number][] = [
@@ -268,7 +279,7 @@ export function createCanvas3D(host: HTMLElement, opts: { height?: number; ariaL
     for (const seg of scene.segments || []) {
       const a = project(seg.from, scale, cx, cy);
       const b = project(seg.to, scale, cx, cy);
-      ctx.strokeStyle = seg.color ?? COLORS.c2;
+      ctx.strokeStyle = rc(seg.color, COLORS.c2);
       ctx.lineWidth = seg.width ?? 2.2;
       ctx.setLineDash(seg.dash ?? []);
       ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
@@ -279,7 +290,8 @@ export function createCanvas3D(host: HTMLElement, opts: { height?: number; ariaL
     // Vectors
     for (const vec of scene.vectors || []) {
       const from = vec.from ?? [0, 0, 0];
-      arrow3(from, vec.to, vec.color ?? COLORS.c1, vec.width ?? 2.6, scale, cx, cy);
+      const vecCol = rc(vec.color, COLORS.c1);
+      arrow3(from, vec.to, vecCol, vec.width ?? 2.6, scale, cx, cy);
       const [fx, fy] = project(from, scale, cx, cy);
       const [tx, ty] = project(vec.to, scale, cx, cy);
       placer.addSegment(fx, fy, tx, ty, 1.0);
@@ -289,7 +301,7 @@ export function createCanvas3D(host: HTMLElement, opts: { height?: number; ariaL
         const tipCrowded = placer.hasCircleNear(tx, ty, 12);
         placer.queue({
           text: vec.label,
-          color: vec.color ?? COLORS.c1,
+          color: vecCol,
           font,
           fontSize: 13,
           priority: 15,
@@ -312,7 +324,7 @@ export function createCanvas3D(host: HTMLElement, opts: { height?: number; ariaL
       const [px, py] = project(pt.p, scale, cx, cy);
       ctx.beginPath();
       ctx.arc(px, py, 5.5, 0, Math.PI * 2);
-      ctx.fillStyle = pt.color ?? COLORS.c2;
+      ctx.fillStyle = rc(pt.color, COLORS.c2);
       ctx.fill();
       ctx.strokeStyle = COLORS.surface;
       ctx.lineWidth = 1.8;
@@ -357,7 +369,10 @@ export function createCanvas3D(host: HTMLElement, opts: { height?: number; ariaL
     wrap,
     canvas,
     draw(next?: Scene3D) {
-      if (next) scene = next;
+      if (next) {
+        scene = next;
+        scenePalette = { ...COLORS };
+      }
       render();
     },
   };

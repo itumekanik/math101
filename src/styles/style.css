@@ -340,7 +340,7 @@ a.chm-item:focus-visible { outline: 2px solid var(--accent); outline-offset: -2p
 .pc-msg.bad { border-left-color: var(--critical); color: var(--text); }
 .pc-msg.info { border-left-color: var(--accent); color: var(--text); }
 .pc-calc {
-  display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px;
+  display: block; line-height: 1.75;
   padding: 10px 13px; border-radius: 10px; background: var(--surface-2);
   font-size: 14px; overflow-x: auto; overflow-y: hidden; font-variant-numeric: tabular-nums;
 }
