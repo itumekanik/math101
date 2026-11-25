@@ -256,6 +256,63 @@ a.chm-item:focus-visible { outline: 2px solid var(--accent); outline-offset: -2p
   background: var(--accent-soft); font-size: 13px; color: var(--text); line-height: 1.55;
 }
 
+/* ---------- Beginner-friendly pedagogical blocks (Analogy, Worked Example, Try List) ---------- */
+.edu-analogy {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px;
+  margin: 12px 0; padding: 11px 14px; border-radius: 10px;
+  background: color-mix(in srgb, var(--series-3) 10%, var(--surface-2));
+  border: 1px solid color-mix(in srgb, var(--series-3) 26%, var(--border));
+  border-left: 4px solid var(--series-3);
+}
+.edu-analogy-icon { font-size: 17px; line-height: 1.4; }
+.edu-analogy strong { display: block; color: var(--text); font-size: 13.5px; margin-bottom: 2px; }
+.edu-analogy p { margin: 0 !important; color: var(--text-2); font-size: 13.5px; line-height: 1.6; }
+
+.edu-example {
+  margin: 12px 0; padding: 12px 15px; border-radius: 10px;
+  background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--series-4);
+  display: grid; gap: 8px;
+}
+.edu-ex-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.edu-ex-badge {
+  display: inline-block; padding: 2px 8px; border-radius: 999px;
+  background: color-mix(in srgb, var(--series-4) 16%, var(--surface-2));
+  color: var(--series-4); font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
+}
+.edu-ex-head strong { color: var(--text); font-size: 14px; }
+.edu-ex-prob { margin: 0 !important; color: var(--text); font-size: 13.5px; font-weight: 500; line-height: 1.55; }
+.edu-ex-steps { margin: 0; padding: 0; list-style: none; counter-reset: exstep; display: grid; gap: 7px; }
+.edu-ex-steps li {
+  counter-increment: exstep; display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 2px 9px; align-items: start;
+}
+.edu-ex-steps li::before {
+  content: counter(exstep); grid-row: span 2; width: 20px; height: 20px; margin-top: 2px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: color-mix(in srgb, var(--series-4) 15%, var(--surface-2));
+  color: var(--series-4); font-size: 11px; font-weight: 700;
+}
+.edu-ex-expr {
+  padding: 5px 10px; border-radius: 7px; background: var(--surface-2); color: var(--text);
+  font-size: 14px; overflow-x: auto; white-space: nowrap;
+}
+.edu-ex-note { margin: 0 !important; color: var(--text-2); font-size: 13px; line-height: 1.55; }
+.edu-ex-ans {
+  padding: 7px 11px; border-radius: 8px;
+  background: color-mix(in srgb, var(--good) 11%, var(--surface-2));
+  border-left: 3px solid var(--good); color: var(--text); font-size: 13.5px; line-height: 1.5;
+}
+.edu-ex-ans strong { color: var(--good-text); }
+
+.edu-try {
+  margin: 12px 0 4px; padding: 11px 14px; border-radius: 10px;
+  background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--border));
+  display: grid; gap: 6px;
+}
+.edu-try-head { display: flex; align-items: center; gap: 7px; font-size: 13.5px; color: var(--text); }
+.edu-try-list { margin: 0; padding-left: 20px; display: grid; gap: 4px; color: var(--text-2); font-size: 13px; line-height: 1.55; }
+.edu-try-list b { color: var(--text); font-weight: 600; }
+.pg-intro .edu-try { margin-top: 12px; max-width: 960px; }
+
 .t-demo { display: grid; grid-template-columns: minmax(0, 1fr); gap: 11px; align-content: start; min-width: 0; }
 .t-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
 .t-controls label { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 7px; max-width: 100%; font-size: 12.5px; color: var(--text-2); }

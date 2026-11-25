@@ -80,6 +80,49 @@ export function createLesson(config) {
     if (block.derive) return derivation(block.derive, key);
     if (block.widget) return widgets[block.widget]?.(L_.state) ?? null;
     if (block.model) return lessonHTML("div", { class: "in-model m-model" }, block.model);
+    if (block.analogy) {
+      const title = block.analogy.title ? L(block.analogy.title) : L({ tr: "Günlük hayattan benzetme", en: "Everyday analogy" });
+      return h(
+        "div",
+        { role: "note", class: "edu-analogy m-model" },
+        h("span", { class: "edu-analogy-icon", text: "🧭", "aria-hidden": "true" }),
+        h("div", {}, h("strong", { text: title }), lessonHTML("p", {}, block.analogy.text)),
+      );
+    }
+    if (block.example) {
+      const ex = block.example;
+      const list = h("ol", { class: "edu-ex-steps" });
+      for (const st of ex.steps || []) {
+        const li = h("li", {});
+        if (st && typeof st === "object" && ("expr" in st || "note" in st)) {
+          if (st.expr) li.append(h("div", { class: "edu-ex-expr", text: `\\(${lessonText(st.expr)}\\)` }));
+          if (st.note) li.append(lessonHTML("p", { class: "edu-ex-note" }, st.note));
+        } else {
+          li.append(lessonHTML("p", { class: "edu-ex-note" }, st));
+        }
+        list.append(li);
+      }
+      return h(
+        "div",
+        { class: "edu-example m-model" },
+        h(
+          "div",
+          { class: "edu-ex-head" },
+          h("span", { class: "edu-ex-badge", text: L({ tr: "Çözümlü Örnek", en: "Worked Example" }) }),
+          h("strong", { text: ex.title ? L(ex.title) : L({ tr: "Adım adım çözüm", en: "Step-by-step solution" }) }),
+        ),
+        ex.problem ? lessonHTML("p", { class: "edu-ex-prob" }, ex.problem) : null,
+        list,
+        ex.answer
+          ? h(
+              "div",
+              { class: "edu-ex-ans" },
+              h("strong", { text: L({ tr: "Sonuç: ", en: "Answer: " }) }),
+              lessonHTML("span", {}, ex.answer),
+            )
+          : null,
+      );
+    }
     if (block.callout) {
       const icons = { tip: "💡", warn: "⚠️", info: "ℹ️" };
       return h(

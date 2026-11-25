@@ -23,9 +23,82 @@ export function mountChapter({ intro, sections, playground, mathSections, mathWi
   const state = {};
   const { html, formula, sectionCard, chapterNavCards, clearObservers } = KIT;
 
+  function renderExample(ex) {
+    const title = ex.title ? L(ex.title) : L({ tr: "Adım adım çözüm", en: "Step-by-step solution" });
+    const list = h("ol", { class: "edu-ex-steps" });
+    for (const st of ex.steps || []) {
+      const li = h("li", {});
+      if (st && typeof st === "object" && ("expr" in st || "note" in st)) {
+        if (st.expr) li.append(h("div", { class: "edu-ex-expr", text: `\\(${L(st.expr)}\\)` }));
+        if (st.note) li.append(html("p", { class: "edu-ex-note" }, st.note));
+      } else {
+        li.append(html("p", { class: "edu-ex-note" }, st));
+      }
+      list.append(li);
+    }
+    const card = h(
+      "div",
+      { class: "edu-example" },
+      h(
+        "div",
+        { class: "edu-ex-head" },
+        h("span", { class: "edu-ex-badge", text: L({ tr: "Çözümlü Örnek", en: "Worked Example" }) }),
+        h("strong", { text: title }),
+      ),
+      ex.problem ? html("p", { class: "edu-ex-prob" }, ex.problem) : null,
+      list,
+      ex.answer
+        ? h(
+            "div",
+            { class: "edu-ex-ans" },
+            h("strong", { text: L({ tr: "Sonuç: ", en: "Answer: " }) }),
+            html("span", {}, ex.answer),
+          )
+        : null,
+    );
+    return card;
+  }
+
+  function renderAnalogy(an) {
+    const title = an.title ? L(an.title) : L({ tr: "Günlük hayattan benzetme", en: "Everyday analogy" });
+    return h(
+      "div",
+      { class: "edu-analogy", role: "note" },
+      h("span", { class: "edu-analogy-icon", text: "🧭", "aria-hidden": "true" }),
+      h("div", {}, h("strong", { text: title }), html("p", {}, an.text)),
+    );
+  }
+
+  function renderPitfall(pf) {
+    const title = pf.title ? L(pf.title) : L({ tr: "Sık yapılan hata", en: "Common mistake" });
+    return h(
+      "div",
+      { class: "tut-callout warn", role: "note" },
+      h("span", { class: "tut-callout-icon", text: "⚠️", "aria-hidden": "true" }),
+      h("div", {}, h("strong", { text: title }), html("p", {}, pf.text)),
+    );
+  }
+
+  function renderTryList(items, title) {
+    const ol = h("ol", { class: "edu-try-list" });
+    for (const item of items) ol.append(html("li", {}, item));
+    return h(
+      "div",
+      { class: "edu-try" },
+      h(
+        "div",
+        { class: "edu-try-head" },
+        h("span", { text: "🧪", "aria-hidden": "true" }),
+        h("strong", { text: title ? L(title) : L({ tr: "Kendin dene ve gözlemle", en: "Try it yourself & observe" }) }),
+      ),
+      ol,
+    );
+  }
+
   function renderIntro() {
     const left = h("div", { class: "t-intro-text" }, h("h2", { text: L(intro.title) }));
     for (const p of intro.paragraphs) left.append(html("p", {}, p));
+    if (intro.analogy) left.append(renderAnalogy(intro.analogy));
 
     const side = h("div", { class: "t-intro-side" });
     if (intro.summary?.length) {
@@ -57,9 +130,17 @@ export function mountChapter({ intro, sections, playground, mathSections, mathWi
       sections.forEach((sec, idx) => {
         const textNodes = [];
         for (const item of sec.body) {
-          if (typeof item === "object" && "eq" in item) textNodes.push(formula(L(item.eq)));
-          else if (typeof item === "object" && "note" in item) textNodes.push(html("div", { class: "in-model" }, item.note));
-          else textNodes.push(html("p", {}, item));
+          if (item && typeof item === "object" && "eq" in item) textNodes.push(formula(L(item.eq)));
+          else if (item && typeof item === "object" && "note" in item) textNodes.push(html("div", { class: "in-model" }, item.note));
+          else if (item && typeof item === "object" && "analogy" in item) textNodes.push(renderAnalogy(item.analogy));
+          else if (item && typeof item === "object" && "example" in item) textNodes.push(renderExample(item.example));
+          else if (item && typeof item === "object" && "pitfall" in item) textNodes.push(renderPitfall(item.pitfall));
+          else if (item && typeof item === "object" && "tryList" in item) textNodes.push(renderTryList(item.tryList, item.title));
+          else if (item && typeof item === "object" && "list" in item) {
+            const ul = h(item.ordered ? "ol" : "ul", { class: "tut-list" });
+            for (const li of item.list) ul.append(html("li", {}, li));
+            textNodes.push(ul);
+          } else textNodes.push(html("p", {}, item));
         }
         const demoBox = h("div", { class: "t-demo" });
         sec.demo(demoBox, state);
@@ -77,6 +158,14 @@ export function mountChapter({ intro, sections, playground, mathSections, mathWi
         h("h2", { text: L(playground.title) }),
         html("p", { class: "sub" }, playground.sub),
       );
+      if (playground.experiments?.length) {
+        head.append(
+          renderTryList(
+            playground.experiments,
+            { tr: "Deneme rehberi — bunları mutlaka dene!", en: "Guided experiments — try these!" },
+          ),
+        );
+      }
       const body = h("section", { class: "card pg-layout" });
       playground.build(body, state);
       playPanel.replaceChildren(head, body);

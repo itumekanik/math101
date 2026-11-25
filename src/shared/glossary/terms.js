@@ -493,6 +493,195 @@ export const GLOSSARY = {
     },
     link: { chapter: "complex-numbers", tab: "theory" },
   },
+
+  // ---- Extended Beginner-Friendly Glossary Entries ----
+  "domain-range": {
+    group: "foundations",
+    name: { tr: "Tanım ve Görüntü Kümesi", en: "Domain & Range" },
+    aka: ["domain", "range", "codomain", "tanım", "görüntü"],
+    def: {
+      tr: R`<b>Tanım kümesi</b> makineye verebileceğiniz geçerli girdilerin tamamıdır (örneğin \(\sqrt{x}\) için \(x \ge 0\), \(1/x\) için \(x \ne 0\)). <b>Görüntü kümesi</b> ise makinenin gerçekten üretebildiği tüm çıktıların kümesidir.`,
+      en: R`The <b>domain</b> is the set of all valid inputs you can feed into a function (e.g. \(x \ge 0\) for \(\sqrt{x}\), \(x \ne 0\) for \(1/x\)). The <b>range</b> is the set of all actual outputs it produces.`,
+    },
+    see: ["function", "injective"],
+    link: { chapter: "functions", tab: "theory" },
+  },
+  composition: {
+    group: "foundations",
+    name: { tr: "Bileşke Fonksiyon", en: "Function composition" },
+    aka: ["f(g(x))", "f∘g", "zincir"],
+    def: {
+      tr: R`İki fonksiyonu arka arkaya bağlamaktır: \((f \circ g)(x) = f(g(x))\). Önce içteki \(g\) çalışır, onun çıktısı dıştaki \(f\)'ye girdi olur. Sıra önemlidir: genelde \(f(g(x)) \ne g(f(x))\).`,
+      en: R`Chaining two functions back-to-back: \((f \circ g)(x) = f(g(x))\). The inner function \(g\) runs first, and its output feeds into \(f\). Order matters: usually \(f(g(x)) \ne g(f(x))\).`,
+    },
+    see: ["function", "inverse-fn", "chain-rule"],
+    link: { chapter: "functions", tab: "play" },
+  },
+  "linear-combination": {
+    group: "spaces",
+    name: { tr: "Doğrusal Bileşim", en: "Linear combination" },
+    aka: ["combination", "kombinasyon", "c1 v1 + c2 v2"],
+    def: {
+      tr: R`Vektörleri sayılarla çarpıp toplamak: \(c_1\mathbf v_1 + c_2\mathbf v_2 + \dots + c_k\mathbf v_k\). Yemek tarifi gibi düşünebilirsiniz: \(c_i\) katsayıları her malzemeden kaç ölçek koyduğunuzdur.`,
+      en: R`Scaling vectors by numbers and adding them: \(c_1\mathbf v_1 + c_2\mathbf v_2 + \dots + c_k\mathbf v_k\). Think of a recipe where each scalar \(c_i\) is how many scoops of ingredient \(\mathbf v_i\) you mix in.`,
+    },
+    see: ["span", "linear-independence", "basis"],
+    link: { chapter: "vector-spaces", tab: "theory" },
+  },
+  "kernel-image": {
+    group: "spaces",
+    name: { tr: "Çekirdek (Nullspace) & Görüntü Uzayı", en: "Kernel (Nullspace) & Column Space" },
+    aka: ["nullspace", "ker", "im", "column space", "sıfır uzayı"],
+    def: {
+      tr: R`Bir \(A\) matrisinin <b>çekirdeği</b> \(\ker(A) = \{\mathbf x : A\mathbf x = \mathbf 0\}\) (sıfıra ezilen girdiler); <b>görüntü (sütun) uzayı</b> \(\operatorname{Col}(A) = \{A\mathbf x\}\) (ulaşılabilen tüm çıktılar).`,
+      en: R`The <b>kernel (nullspace)</b> \(\ker(A)=\{\mathbf x : A\mathbf x=\mathbf 0\}\) holds all inputs squashed to zero; the <b>column space</b> \(\operatorname{Col}(A)=\{A\mathbf x\}\) holds all reachable outputs.`,
+    },
+    see: ["rank", "rank-nullity", "subspace"],
+    link: [{ chapter: "linear-systems", tab: "math" }, { chapter: "basis-dimension", tab: "theory" }],
+  },
+  "rank-nullity": {
+    group: "spaces",
+    name: { tr: "Rank–Nullity (Boyut) Teoremi", en: "Rank–Nullity Theorem" },
+    aka: ["boyut teoremi", "nullity", "serbest değişken"],
+    def: {
+      tr: R`\(m\times n\) bir \(A\) matrisi için \(\operatorname{rank}(A) + \dim(\ker A) = n\). Yani her girdi sütunu ya çıktıya yeni bir boyut katar (pivot) ya da çekirdekte serbest değişken olur — ikisinin toplamı daima sütun sayısı \(n\)'dir.`,
+      en: R`For an \(m\times n\) matrix \(A\), \(\operatorname{rank}(A) + \dim(\ker A) = n\). Every input column either creates an output dimension (pivot) or becomes a free variable in the kernel.`,
+    },
+    see: ["rank", "kernel-image", "basis"],
+    link: { chapter: "basis-dimension", tab: "math" },
+  },
+  "linear-map": {
+    group: "matrices",
+    name: { tr: "Doğrusal Dönüşüm", en: "Linear transformation" },
+    aka: ["linear transformation", "dönüşüm", "T(x)=Ax"],
+    def: {
+      tr: R`Orijini sabit tutan ve ızgara çizgilerini bükmeden paralel/eşit aralıklı bırakan dönüşüm: \(T(\mathbf u+\mathbf v)=T(\mathbf u)+T(\mathbf v)\) ve \(T(c\mathbf u)=cT(\mathbf u)\). Sonlu boyutta her doğrusal dönüşüm bir [[matrix|matris]] çarpımıdır.`,
+      en: R`A map keeping the origin fixed and grid lines straight, parallel, and evenly spaced: \(T(\mathbf u+\mathbf v)=T(\mathbf u)+T(\mathbf v)\) and \(T(c\mathbf u)=cT(\mathbf u)\). In finite dimensions every linear map is a [[matrix|matrix]].`,
+    },
+    see: ["matrix", "determinant"],
+    link: { chapter: "matrices", tab: "theory" },
+  },
+  asymptote: {
+    group: "calculus",
+    name: { tr: "Asimptot", en: "Asymptote" },
+    aka: ["dikey asimptot", "yatay asimptot", "vertical", "horizontal"],
+    def: {
+      tr: R`Grafiğin sonsuza doğru giderek yapıştığı ama değmek zorunda olmadığı kılavuz doğru. Payda sıfırlandığında <b>dikey asimptot</b> (\(x=a\)), \(x\to\pm\infty\) iken fonksiyon bir \(L\) sayısına yaklaşıyorsa <b>yatay asimptot</b> (\(y=L\)) oluşur.`,
+      en: R`A guide line a curve hugs ever closer toward infinity. Blowing up at \(x=a\) gives a <b>vertical asymptote</b>; settling to \(L\) as \(x\to\pm\infty\) gives a <b>horizontal asymptote</b> \(y=L\).`,
+    },
+    see: ["limit", "continuity"],
+    link: { chapter: "limits", tab: "theory" },
+  },
+  "squeeze-theorem": {
+    group: "calculus",
+    name: { tr: "Sandviç (Sıkıştırma) Teoremi", en: "Squeeze (Sandwich) Theorem" },
+    aka: ["sandviç", "sıkıştırma", "sandwich"],
+    def: {
+      tr: R`Eğer \(g(x) \le f(x) \le h(x)\) ve hem alt sınır \(g\) hem üst sınır \(h\) aynı \(L\) limitine gidiyorsa, arada sıkışan \(f(x)\) de mecburen \(L\)'ye gider. \(\lim_{x\to 0} x^2\sin(1/x)=0\) bunun klasik örneğidir.`,
+      en: R`If \(g(x) \le f(x) \le h(x)\) and both outer functions converge to \(L\), the trapped function \(f(x)\) must converge to \(L\) too — e.g. \(\lim_{x\to 0} x^2\sin(1/x)=0\).`,
+    },
+    see: ["limit"],
+    link: { chapter: "limits", tab: "theory" },
+  },
+  "chain-rule": {
+    group: "calculus",
+    name: { tr: "Zincir Kuralı", en: "Chain rule" },
+    aka: ["bileşke türevi", "dışın türevi çarpı için türevi"],
+    def: {
+      tr: R`İç içe geçmiş fonksiyonların türevi: \(\frac{d}{dx}f(g(x)) = f'(g(x))\cdot g'(x)\). Dişli çarklar gibi düşünün: büyük çarkın hızı, küçük çarkın hızlarının çarpımıdır.`,
+      en: R`Derivative of nested functions: \(\frac{d}{dx}f(g(x)) = f'(g(x))\cdot g'(x)\). Like interlocking gears, rates of change multiply along the chain.`,
+    },
+    see: ["derivative", "composition", "u-substitution"],
+    link: { chapter: "derivatives", tab: "theory" },
+  },
+  "critical-point": {
+    group: "calculus",
+    name: { tr: "Kritik Nokta & Ekstremum", en: "Critical point & Extremum" },
+    aka: ["maksimum", "minimum", "maximum", "minimum", "tepe", "çukur"],
+    def: {
+      tr: R`\(f'(c)=0\) (teğet yatay) veya \(f'(c)\) tanımsız olan nokta. Yerel tepe (maksimum) ve çukurlar (minimum) yalnızca kritik noktalarda veya aralık uçlarında ortaya çıkabilir.`,
+      en: R`A point where \(f'(c)=0\) (horizontal tangent) or \(f'(c)\) does not exist. Local peaks and valleys can only occur at critical points or endpoints.`,
+    },
+    see: ["derivative", "inflection-point"],
+    link: { chapter: "derivatives", tab: "theory" },
+  },
+  "inflection-point": {
+    group: "calculus",
+    name: { tr: "Büküm Noktası & Konkavlık", en: "Inflection point & Concavity" },
+    aka: ["konveks", "konkav", "second derivative", "ikinci türev"],
+    def: {
+      tr: R`\(f''(x) > 0\) iken grafik yukarı bakar (gülen yüz, konveks); \(f''(x) < 0\) iken aşağı bakar (konkav). Eğriliğin işaret değiştirdiği noktaya <b>büküm noktası</b> denir.`,
+      en: R`Where \(f''(x) > 0\) the curve bends upward (cup / convex); where \(f''(x) < 0\) it bends downward (cap / concave). A point where concavity flips is an <b>inflection point</b>.`,
+    },
+    see: ["derivative", "critical-point"],
+    link: { chapter: "derivatives", tab: "math" },
+  },
+  "geometric-series": {
+    group: "series-int",
+    name: { tr: "Geometrik Seri", en: "Geometric series" },
+    aka: ["ortak oran", "common ratio", "a/(1-r)"],
+    def: {
+      tr: R`Her terimin bir öncekinin sabit \(r\) katı olduğu seri: \(\sum_{n=0}^\infty a r^n\). Yalnızca \(|r| < 1\) iken yakınsar ve tam toplamı \(\frac{a}{1-r}\) olur.`,
+      en: R`A series where each term is \(r\) times the previous: \(\sum_{n=0}^\infty a r^n\). Converges if and only if \(|r| < 1\), with exact sum \(\frac{a}{1-r}\).`,
+    },
+    see: ["series", "p-series"],
+    link: { chapter: "sequences-series", tab: "theory" },
+  },
+  "p-series": {
+    group: "series-int",
+    name: { tr: "p-Serisi & Harmonik Seri", en: "p-series & Harmonic series" },
+    aka: ["harmonic", "harmonik", "1/n^p"],
+    def: {
+      tr: R`\(\sum_{n=1}^\infty \frac{1}{n^p}\) serisi \(p > 1\) ise yakınsar, \(p \le 1\) ise ıraksar. \(p=1\) özel hâli olan <b>harmonik seri</b> \(\sum \frac{1}{n}\) terimleri sıfıra gitmesine rağmen sonsuza büyür!`,
+      en: R`\(\sum_{n=1}^\infty \frac{1}{n^p}\) converges iff \(p > 1\) and diverges for \(p \le 1\). The borderline case \(p=1\) is the <b>harmonic series</b> \(\sum 1/n\), which diverges even though \(1/n \to 0\).`,
+    },
+    see: ["series", "geometric-series"],
+    link: { chapter: "sequences-series", tab: "theory" },
+  },
+  "u-substitution": {
+    group: "series-int",
+    name: { tr: "Değişken Değiştirme (u-Dönüşümü)", en: "u-Substitution" },
+    aka: ["substitution", "zincir kuralının tersi"],
+    def: {
+      tr: R`[[chain-rule|Zincir kuralının]] integraldeki tersidir: içteki ifadeye \(u=g(x)\) deyip \(du=g'(x)\,dx\) yazınca karmaşık integral basit bir \(\int f(u)\,du\) integraline dönüşür.`,
+      en: R`The reverse of the [[chain-rule|chain rule]]: setting \(u=g(x)\) and \(du=g'(x)\,dx\) collapses a complicated integral into a simple \(\int f(u)\,du\).`,
+    },
+    see: ["antiderivative", "chain-rule", "integration-by-parts"],
+    link: { chapter: "indefinite-integrals", tab: "theory" },
+  },
+  "integration-by-parts": {
+    group: "series-int",
+    name: { tr: "Kısmi İntegrasyon", en: "Integration by parts" },
+    aka: ["by parts", "LIATE", "LAPTU", "u dv"],
+    def: {
+      tr: R`Çarpımın türevi kuralının tersi: \(\int u\,dv = uv - \int v\,du\). Türev alınca sadeleşen parçayı \(u\) seçmek (örneğin \(\ln x\) veya \(x^n\)) integrali kolaylaştırır.`,
+      en: R`The reverse of the product rule: \(\int u\,dv = uv - \int v\,du\). Pick \(u\) to be the factor that simplifies when differentiated (e.g. \(\ln x\) or \(x^n\)).`,
+    },
+    see: ["antiderivative", "u-substitution"],
+    link: { chapter: "indefinite-integrals", tab: "theory" },
+  },
+  "arc-length": {
+    group: "series-int",
+    name: { tr: "Yay Uzunluğu", en: "Arc length" },
+    aka: ["eğri uzunluğu", "curve length", "pisagor"],
+    def: {
+      tr: R`Bir eğriyi minik düz parçalara bölüp Pisagor teoremiyle \(ds = \sqrt{1 + (f'(x))^2}\,dx\) toplamak: \(L = \int_a^b \sqrt{1 + (f'(x))^2}\,dx\).`,
+      en: R`Slicing a curve into tiny straight segments via Pythagoras \(ds = \sqrt{1+(f'(x))^2}\,dx\) and summing: \(L = \int_a^b \sqrt{1+(f'(x))^2}\,dx\).`,
+    },
+    see: ["solid-of-revolution", "riemann-sum"],
+    link: { chapter: "integral-apps", tab: "theory" },
+  },
+  "roots-of-unity": {
+    group: "complex",
+    name: { tr: "n. Dereceden Kökler & Birim Kökleri", en: "nth Roots & Roots of Unity" },
+    aka: ["n-inci kök", "düzgün çokgen", "polygon"],
+    def: {
+      tr: R`\(z^n = w\) denkleminin karmaşık düzlemde daima tam \(n\) tane kökü vardır. Hepsi \(|w|^{1/n}\) yarıçaplı çember üzerinde eşit \(2\pi/n\) açılarla dizilerek düzgün bir \(n\)-gen oluşturur.`,
+      en: R`The equation \(z^n = w\) always has exactly \(n\) complex solutions, equally spaced by angle \(2\pi/n\) on the circle of radius \(|w|^{1/n}\), forming a regular \(n\)-gon.`,
+    },
+    see: ["euler-formula", "modulus-arg"],
+    link: { chapter: "complex-numbers", tab: "theory" },
+  },
 };
 
 export const otherLang = () => (I18N.lang === "en" ? "tr" : "en");
