@@ -1,5 +1,7 @@
 # Matematik Öğrenme Yolu · Mathematics Learning Path
 
+**Canlı site:** **https://itumekanik.github.io/math101/** *(veya çevrimdışı kopyasını doğrudan [ZIP olarak indirip](https://itumekanik.github.io/math101/math-learning-path.zip) `index.html` dosyasına çift tıklayabilirsiniz).*
+
 21 derslik üniversite matematiği müfredatını tarayıcıda tamamen çevrimdışı çalışan, etkileşimli 2B/3B görselleştirmeler, adım adım ispatlar, aranabilir kavram sözlüğü ve doğrulamalı alıştırmalarla sunan öğretim platformu.
 
 ## Kapsanan Müfredat (21 Ders · 18 Bölüm)

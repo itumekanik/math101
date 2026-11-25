@@ -10,8 +10,8 @@ export interface Release {
 declare const __RELEASE__: Release;
 
 export const RELEASE: Release = __RELEASE__;
-export const REPO: string | null = RELEASE.repo;
-export const CHANGELOG_URL: string | null = REPO ? `${REPO}/blob/main/CHANGELOG.md` : null;
+export const REPO: string = RELEASE.repo ?? "https://github.com/itumekanik/math101";
+export const CHANGELOG_URL: string = `${REPO}/blob/main/CHANGELOG.md`;
 
 export function releaseDate(): string {
   return new Intl.DateTimeFormat(I18N.lang === "en" ? "en-GB" : "tr-TR", {
